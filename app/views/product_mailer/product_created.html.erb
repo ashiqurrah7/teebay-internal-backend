@@ -1,0 +1,9 @@
+<h1>You created a new product</h1>
+<h2>The product named: <%= @product.title %> has been added to your inventory</h2>
+
+<p>Here are the details:</p>
+<p>Categories: <%= @product.categories.pluck(:name).join(", ") %></p>
+<p>Description: <%= @product.desc %></p>
+<p>Price: <%= @product.price %></p>
+
+<a href="http://localhost:3001/login"><h2>Click here to login to the app</h2></a>
