@@ -22,7 +22,7 @@ class ProductsController < ApplicationController
         ProductMailer.with(user: current_user, product: product).product_created.deliver_later
         render json: ProductSerializer.new.serialize_to_json(product), status: :ok
       else
-        render json: {message: "Error creating product", data: product.errors}, status: :bad_request
+        render json: {message: "Error creating product", data: created_product.errors}, status: :bad_request
       end
     else
       render json: {message: "You are not authorized to perform this action"}, status: :forbidden
@@ -37,7 +37,7 @@ class ProductsController < ApplicationController
     if updated_product
         render json: ProductSerializer.new.serialize_to_json(product), status: :ok
     else
-        render json: {message: "Error updating user", data: product.errors}, status: :bad_request
+        render json: {message: "Error updating user", data: updated_product.errors}, status: :bad_request
     end
   end
 

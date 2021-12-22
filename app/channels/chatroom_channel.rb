@@ -1,18 +1,8 @@
-class MessageSerializer < Panko::Serializer
-  attributes :id, :text, :user_id ,:created_at
-end
-
 class ChatroomChannel < ApplicationCable::Channel
   def subscribed
     @room = Conversation.find(params[:room])
     stream_for @room
   end
-
-  # def received(data)
-  #   ChatroomChannel.broadcast_to(@room,{
-  #     messages: Panko::ArraySerializer.new(@room.messages, each_serializer: MessageSerializer).to_json
-  #   })
-  # end
 
   def create_message(data)
         token = Doorkeeper::AccessToken.find_by_token(data["token"])

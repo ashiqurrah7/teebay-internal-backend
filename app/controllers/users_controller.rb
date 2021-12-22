@@ -17,7 +17,7 @@ class UsersController < ApplicationController
     if created_user
         render json: UserSerializer.new.serialize_to_json(user), status: :ok
       else
-        render json: {message: "Error creating user", data: created_user}, status: :bad_request
+        render json: {message: "Error creating user", data: created_user.errors}, status: :bad_request
     end
   end
 

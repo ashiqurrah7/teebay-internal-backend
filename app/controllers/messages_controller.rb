@@ -16,8 +16,9 @@ class MessagesController < ApplicationController
         if created_message
           render json: MessageSerializer.new.serialize_to_json(message), status: :ok
         else
-          render json: {message: "Error creating product", data: product.errors}, status: :bad_request
+          render json: {message: "Error creating product", data: message.errors}, status: :bad_request
         end
+      else
         render json: {message: "You are not authorized to perform this action"}, status: :forbidden
       end
   end
@@ -25,6 +26,6 @@ class MessagesController < ApplicationController
   private
     # Only allow a list of trusted parameters through.
     def message_params
-      params.require(:message).permit(:conversation_id,:text)
+      params.require(:message).permit(:text)
     end
 end

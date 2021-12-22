@@ -1,5 +1,4 @@
 class ConversationsController < ApplicationController
-  before_action :set_conversation, only: %i[ show edit update destroy ]
 
   # GET /conversations or /conversations.json
   def index
@@ -15,24 +14,28 @@ class ConversationsController < ApplicationController
 
   # POST /conversations or /conversations.json
   def create
-    conversation = Conversation.new({**conversation_params, first_user_id: current_user.id})
-    created_conversation = conversation.save
-    if created_product
-      render json: ConversationSerializer.new.serialize_to_json(conversation), status: :ok
+    if current_user
+      conversation = Conversation.where(first_user_id: current_user.id, second_user_id: conversation_params[:second_user_id]).first
+      if !conversation
+        conversation = Conversation.new({**conversation_params, first_user_id: current_user.id})
+        created_conversation = conversation.save
+        if created_conversation
+          render json: ConversationSerializer.new.serialize_to_json(conversation), status: :ok
+        else
+          render json: {message: "Error creating chat room", data: created_conversation.errors}, status: :bad_request
+        end
+      else
+        render json: ConversationSerializer.new.serialize_to_json(conversation), status: :ok
+      end
     else
-      render json: {message: "Error creating chat room", data: conversation.errors}, status: :bad_request
+      render json: {message: "You are not authorized to perform this action"}, status: :forbidden
     end
   end
 
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_conversation
-      @conversation = Conversation.find(params[:id])
-    end
-
     # Only allow a list of trusted parameters through.
     def conversation_params
-      params.require(:conversation).permit(:second_user_id_id)
+      params.require(:conversation).permit(:second_user_id)
     end
 end
